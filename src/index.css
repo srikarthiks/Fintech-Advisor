@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #1a1a2e;
+    color: #ffffff;
+    overflow-x: hidden;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Ensure main content area doesn't overflow */
+  .main-content {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-accent-blue text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 border border-border-color text-text-secondary rounded-lg hover:border-accent-blue hover:text-accent-blue transition-colors duration-200 font-medium;
+  }
+  
+  .card {
+    @apply bg-card-bg border border-border-color rounded-lg p-4;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 bg-transparent border border-border-color rounded-lg text-text-primary placeholder-text-secondary focus:border-accent-blue focus:outline-none transition-colors duration-200;
+  }
+  
+  /* Custom select styling for dark theme */
+  .input-field select {
+    @apply bg-transparent text-text-primary;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23b0b0b0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    appearance: none;
+    color-scheme: light;
+  }
+  
+  /* Force light color scheme for all selects */
+  select {
+    color-scheme: light !important;
+  }
+  
+  .input-field select:focus {
+    @apply border-accent-blue;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%231976d2' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  }
+  
+  /* Force black text on all select options */
+  select option {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  
+  .input-field select option {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    padding: 0.5rem;
+  }
+  
+  .input-field select option:hover {
+    background-color: rgba(25, 118, 210, 0.2) !important;
+    color: #000000 !important;
+  }
+  
+  .input-field select option:checked {
+    background-color: #1976d2 !important;
+    color: #000000 !important;
+  }
+  
+  .input-field select option:selected {
+    background-color: #1976d2 !important;
+    color: #000000 !important;
+  }
+  
+  /* Additional selectors for better coverage */
+  select option:not(:checked) {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Ultra-specific selectors to override any conflicting styles */
+  .input-field select option,
+  select option,
+  option {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Target specific select elements in the transactions page */
+  #filter-type option,
+  #filter-category option,
+  #sort-transactions option {
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Additional select improvements for better UX */
+  .input-field select:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+  
+  /* Firefox specific select styling */
+  @-moz-document url-prefix() {
+    .input-field select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23b0b0b0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    }
+    
+    .input-field select option {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
+    
+    select option {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
+  }
+  
+  /* Webkit/Chrome specific select styling */
+  .input-field select option {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  
+  /* Webkit specific select styling */
+  .input-field select::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .input-field select::-webkit-scrollbar-track {
+    @apply bg-card-bg;
+  }
+  
+  .input-field select::-webkit-scrollbar-thumb {
+    @apply bg-border-color rounded;
+  }
+  
+  .input-field select::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent-blue;
+  }
+  
+  .table-header {
+    @apply px-6 py-4 text-left text-text-secondary font-semibold bg-card-bg;
+  }
+  
+  .table-cell {
+    @apply px-6 py-4 text-text-primary border-b border-border-color;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glass-effect {
+    background: rgba(42, 42, 62, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(58, 58, 78, 0.3);
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Prevent horizontal overflow */
+  .no-overflow {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+}
