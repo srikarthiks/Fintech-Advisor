@@ -19,7 +19,12 @@ const PORT = process.env.PORT || 3010;
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:51785',
+    'http://localhost:3000',
+    'http://localhost:5174'
+  ],
   credentials: true
 }));
 app.use(bodyParser.json());
