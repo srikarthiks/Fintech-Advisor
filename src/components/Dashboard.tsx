@@ -1,9 +1,5 @@
 import React, { useMemo } from 'react';
 import {
-  Box,
-  Card,
-  Typography,
-  Grid,
   LinearProgress,
   Chip,
   Table,
@@ -11,8 +7,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  Paper
+  TableRow
 } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
@@ -24,29 +19,29 @@ import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, 
 import { Transaction, Category, Budget } from '../types';
 
 interface DashboardProps {
-  transactions: Transaction[];
-  categories: Category[];
-  budgets: Budget;
+  transactions?: Transaction[];
+  categories?: Category[];
+  budgets?: Budget;
   currency: string;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ transactions, categories, budgets, currency }) => {
+const Dashboard: React.FC<DashboardProps> = ({ transactions = [], categories = [], budgets = {}, currency }) => {
   const stats = useMemo(() => {
-    const totalIncome = transactions
+    const totalIncome = (transactions || [])
       .filter(t => t.type === 'income')
       .reduce((sum, t) => sum + Number(t.amount), 0);
 
-    const totalExpenses = transactions
+    const totalExpenses = (transactions || [])
       .filter(t => t.type === 'expense')
       .reduce((sum, t) => sum + Number(t.amount), 0);
 
     const netIncome = totalIncome - totalExpenses;
 
-    const totalBudget = Object.values(budgets)
+    const totalBudget = Object.values(budgets || {})
       .reduce((sum, budget) => sum + Number(budget.amount), 0);
 
-    const budgetUsed = Object.entries(budgets).reduce((sum, [category, budget]) => {
-      const spent = transactions
+    const budgetUsed = Object.entries(budgets || {}).reduce((sum, [category, budget]) => {
+      const spent = (transactions || [])
         .filter(t => t.type === 'expense' && t.category === category)
         .reduce((catSum, t) => catSum + Number(t.amount), 0);
       return sum + spent;
@@ -64,7 +59,7 @@ const Dashboard: React.FC<DashboardProps> = ({ transactions, categories, budgets
 
   // Chart data for expenses by category
   const expenseChartData = useMemo(() => {
-    const categoryExpenses = transactions
+    const categoryExpenses = (transactions || [])
       .filter(t => t.type === 'expense')
       .reduce((acc, t) => {
         acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
@@ -80,7 +75,7 @@ const Dashboard: React.FC<DashboardProps> = ({ transactions, categories, budgets
 
   // Monthly trend data
   const monthlyTrendData = useMemo(() => {
-    const monthlyData = transactions.reduce((acc, t) => {
+    const monthlyData = (transactions || []).reduce((acc, t) => {
       const month = new Date(t.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
       if (!acc[month]) {
         acc[month] = { income: 0, expenses: 0 };
@@ -101,7 +96,7 @@ const Dashboard: React.FC<DashboardProps> = ({ transactions, categories, budgets
     }));
   }, [transactions]);
 
-  const recentTransactions = transactions.slice(0, 5);
+  const recentTransactions = (transactions || []).slice(0, 5);
 
   const COLORS = ['#1976d2', '#4caf50', '#f44336', '#ff9800', '#9c27b0', '#00bcd4', '#795548', '#607d8b'];
 
@@ -166,12 +161,12 @@ const Dashboard: React.FC<DashboardProps> = ({ transactions, categories, budgets
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={(entry: any) => `${entry.name} ${(entry.percent * 100).toFixed(0)}%`}
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {expenseChartData.map((entry, index) => (
+                    {expenseChartData.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -221,8 +216,8 @@ const Dashboard: React.FC<DashboardProps> = ({ transactions, categories, budgets
         <div className="card">
           <h2 className="text-xl font-semibold text-text-primary mb-4">Budget Overview</h2>
           <div className="space-y-4">
-            {Object.entries(budgets).map(([category, budget]) => {
-              const spent = transactions
+            {Object.entries(budgets || {}).map(([category, budget]) => {
+              const spent = (transactions || [])
                 .filter(t => t.type === 'expense' && t.category === category)
                 .reduce((sum, t) => sum + Number(t.amount), 0);
               const percentage = Number(budget.amount) > 0 ? (spent / Number(budget.amount)) * 100 : 0;
